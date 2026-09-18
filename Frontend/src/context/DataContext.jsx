@@ -125,15 +125,22 @@ export function DataProvider({ children }) {
     addAuditLog(user.id, user.username, 'ASSIGN', 'ZoomRequest', id, `Assigned Zoom request to ${assigneeId}`, 'Zoom Support');
   };
 
-  const updateZoomMeetingLink = (id, meetingLink, user) => {
+  const updateZoomMeetingLink = (id, linkData, user) => {
+    const isObj = typeof linkData === 'object' && linkData !== null;
+    const meetingLink = isObj ? linkData.meetingLink : linkData;
+    const meetingId = isObj ? linkData.meetingId : '';
+    const passcode = isObj ? linkData.passcode : '';
+
     setZoomRequests(prev => prev.map(z => z.id === id ? {
       ...z,
       meetingLink,
+      meetingId: meetingId !== undefined ? meetingId : (z.meetingId || ''),
+      passcode: passcode !== undefined ? passcode : (z.passcode || ''),
       linkUploadedBy: user.id,
       linkUploadedAt: new Date().toISOString(),
       status: z.status === 'Pending' ? 'Confirmed' : z.status,
     } : z));
-    addAuditLog(user.id, user.username, 'UPDATE_LINK', 'ZoomRequest', id, `Uploaded Zoom meeting link for ${id}`, 'Zoom Support');
+    addAuditLog(user.id, user.username, 'UPDATE_LINK', 'ZoomRequest', id, `Uploaded Zoom meeting link & access info for ${id}`, 'Zoom Support');
   };
 
   // --- USERS ---

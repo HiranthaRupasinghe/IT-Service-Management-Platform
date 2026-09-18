@@ -87,15 +87,27 @@ export default function ZoomRequesterDashboard() {
                   <td><Badge status={z.meetingLevel === 'Critical' ? 'High' : 'Medium'}>{z.meetingLevel}</Badge></td>
                   <td>
                     {z.meetingLink ? (
-                      <a
-                        href={z.meetingLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn btn-primary btn-sm"
-                        style={{ padding: '4px 10px', fontSize: '0.75rem', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 5 }}
-                      >
-                        <LinkIcon size={12} /> Join Meeting
-                      </a>
+                      <div>
+                        <a
+                          href={z.meetingLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn btn-primary btn-sm"
+                          style={{ padding: '4px 10px', fontSize: '0.75rem', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 5, marginBottom: (z.meetingId || z.passcode) ? 4 : 0 }}
+                        >
+                          <LinkIcon size={12} /> Join Meeting
+                        </a>
+                        {(z.meetingId || z.passcode) && (
+                          <div style={{ fontSize: '0.72rem', color: 'var(--gray-700)', marginTop: 4, display: 'flex', flexDirection: 'column', gap: 2 }}>
+                            {z.meetingId && (
+                              <div><span style={{ color: 'var(--gray-400)' }}>ID:</span> <code style={{ fontFamily: 'JetBrains Mono, monospace', fontWeight: 600 }}>{z.meetingId}</code></div>
+                            )}
+                            {z.passcode && (
+                              <div><span style={{ color: 'var(--gray-400)' }}>Passcode:</span> <code style={{ fontFamily: 'JetBrains Mono, monospace', fontWeight: 600 }}>{z.passcode}</code></div>
+                            )}
+                          </div>
+                        )}
+                      </div>
                     ) : (
                       <span className="badge badge-amber" style={{ fontSize: '0.72rem' }}>
                         <Clock size={11} /> Link Pending from IT

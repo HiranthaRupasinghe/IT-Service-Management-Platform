@@ -8,6 +8,7 @@ import { Badge } from '../../components/ui/Badge';
 import StatCard from '../../components/ui/StatCard';
 import Modal from '../../components/ui/Modal';
 import { Wrench, Plus, AlertTriangle, CheckCircle, Clock, ExternalLink } from 'lucide-react';
+import SearchableAssetSelect from '../../components/ui/SearchableAssetSelect';
 
 export default function RepairListPage() {
   const { repairs, vendors, assets, createRepair } = useData();
@@ -93,10 +94,12 @@ export default function RepairListPage() {
         <div className="form-row">
           <div className="form-group">
             <label className="form-label">Asset <span className="required">*</span></label>
-            <select className="form-select" value={form.assetId} onChange={e => setForm(f=>({...f,assetId:e.target.value}))}>
-              <option value="">-- Select Asset --</option>
-              {assets.map(a => <option key={a.id} value={a.id}>{a.tag} — {a.brand} {a.model}</option>)}
-            </select>
+            <SearchableAssetSelect
+              assets={assets}
+              value={form.assetId}
+              onChange={(assetId) => setForm(f => ({ ...f, assetId }))}
+              placeholder="-- Select Asset --"
+            />
           </div>
           <div className="form-group">
             <label className="form-label">Vendor <span className="required">*</span></label>

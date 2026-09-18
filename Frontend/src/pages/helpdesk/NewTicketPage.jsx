@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useNotifications } from '../../context/NotificationContext';
 import { USERS, ROLES } from '../../data/mockData';
 import { ArrowLeft, Plus } from 'lucide-react';
+import SearchableAssetSelect from '../../components/ui/SearchableAssetSelect';
 
 export default function NewTicketPage() {
   const { assets, createTicket } = useData();
@@ -18,6 +19,16 @@ export default function NewTicketPage() {
 
   const technicians = USERS.filter(u => [ROLES.IT_ADMIN, ROLES.TRAINEE].includes(u.role));
   const setField = (k, v) => setForm(f => ({ ...f, [k]: v }));
+
+  const handleAssetChange = (assetId) => {
+    setField('assetId', assetId);
+    if (assetId) {
+      const selected = assets.find(a => String(a.id) === String(assetId));
+      if (selected?.division && !form.division) {
+        setField('division', selected.division);
+      }
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -83,10 +94,12 @@ export default function NewTicketPage() {
                 </div>
                 <div className="form-group">
                   <label className="form-label">Related Asset (Optional)</label>
-                  <select className="form-select" value={form.assetId} onChange={e => setField('assetId', e.target.value)}>
-                    <option value="">-- Select Asset --</option>
-                    {assets.map(a => <option key={a.id} value={a.id}>{a.tag} — {a.brand} {a.model}</option>)}
-                  </select>
+                  <SearchableAssetSelect
+                    assets={assets}
+                    value={form.assetId}
+                    onChange={handleAssetChange}
+                    placeholder="-- Select Asset --"
+                  />
                 </div>
               </div>
             </div>
